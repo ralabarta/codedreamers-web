@@ -36,4 +36,3 @@ El build utiliza rutas relativas, genera el fallback `200.html`, incluye fuentes
 ## Contacto incluido
 
 - `codedreamers.dev@gmail.com`
-- `+53 52015051`
