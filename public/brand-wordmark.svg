@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96">
+  <path fill="#f4f7fb" d="M27 10h42l15 15v15H66v-7H30c-5 0-8 3-8 8v14c0 5 3 8 8 8h36v-7h18v15L69 86H27C13 86 4 76 4 62V34C4 20 13 10 27 10Z"/>
+  <path fill="#20cfd4" d="M35 37h15c9 0 15 6 15 15s-6 15-15 15H35V37Z"/>
+  <text x="98" y="61" fill="#f4f7fb" font-family="Geologica, Arial, sans-serif" font-size="38" font-weight="700" letter-spacing="-1.2">CodeDreamers</text>
+</svg>

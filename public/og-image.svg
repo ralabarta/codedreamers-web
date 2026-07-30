@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#071b2a"/>
+  <g fill="none" stroke="#8eb1c6" stroke-opacity=".22">
+    <path d="M45 74H1155M45 556H1155M66 52V578M1134 52V578"/>
+    <path d="M120 74V556M240 74V556M360 74V556M480 74V556M600 74V556M720 74V556M840 74V556M960 74V556M1080 74V556" stroke-opacity=".1"/>
+    <path d="M66 160H1134M66 268H1134M66 376H1134M66 484H1134" stroke-opacity=".1"/>
+  </g>
+  <g stroke="#20cfd4" stroke-width="2">
+    <path d="M45 74h44M45 74v44M1155 556h-44M1155 556v-44"/>
+  </g>
+  <g transform="translate(70 60) scale(.58)">
+    <path fill="#f4f7fb" d="M27 10h42l15 15v15H66v-7H30c-5 0-8 3-8 8v14c0 5 3 8 8 8h36v-7h18v15L69 86H27C13 86 4 76 4 62V34C4 20 13 10 27 10Z"/>
+    <path fill="#20cfd4" d="M35 37h15c9 0 15 6 15 15s-6 15-15 15H35V37Z"/>
+  </g>
+  <text x="133" y="110" fill="#f4f7fb" font-family="DejaVu Sans, sans-serif" font-size="30" font-weight="700">CodeDreamers</text>
+  <text x="70" y="192" fill="#20cfd4" font-family="DejaVu Sans Mono, monospace" font-size="16" font-weight="700">SOFTWARE · DATA · AI</text>
+  <text x="70" y="260" fill="#f4f7fb" font-family="DejaVu Sans, sans-serif" font-size="52" font-weight="800">Software para captar,</text>
+  <text x="70" y="320" fill="#f4f7fb" font-family="DejaVu Sans, sans-serif" font-size="52" font-weight="800">vender, operar y escalar.</text>
+  <text x="73" y="444" fill="#b9cfdd" font-family="Arial, sans-serif" font-size="23">54 productos. Una arquitectura conectada.</text>
+  <g transform="translate(966 310)">
+    <circle r="143" fill="none" stroke="#6796b5" stroke-opacity=".32" stroke-dasharray="3 8"/>
+    <circle r="104" fill="none" stroke="#6796b5" stroke-opacity=".28" stroke-dasharray="3 7"/>
+    <circle r="66" fill="#061c2b" stroke="#f4f7fb" stroke-opacity=".48"/>
+    <text y="16" text-anchor="middle" fill="#f4f7fb" font-family="DejaVu Sans, sans-serif" font-size="78" font-weight="800">54</text>
+    <text y="41" text-anchor="middle" fill="#20cfd4" font-family="DejaVu Sans Mono, monospace" font-size="10" font-weight="700">PRODUCTOS</text>
+    <g stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M-143 61C-102 37-87-54-37-102" stroke="#20cfd4"/>
+      <path d="M-37-102C17-142 81-113 122-61" stroke="#f347a6"/>
+      <path d="M122-61C157-4 143 60 91 106" stroke="#5b63ff"/>
+      <path d="M91 106C44 143-34 147-91 102" stroke="#36cfaa"/>
+      <path d="M-91 102C-114 84-129 73-143 61" stroke="#ffb83f"/>
+    </g>
+  </g>
+  <g font-family="monospace" font-size="12" font-weight="700" letter-spacing="2">
+    <text x="70" y="544" fill="#8eb1c6">CARTERA 360° · EDICIÓN 2026</text>
+    <text x="1130" y="544" text-anchor="end" fill="#8857ff">SYS / 054</text>
+  </g>
+</svg>
