@@ -1,38 +1,62 @@
 # CodeDreamers 360
 
-Landing estática en español para presentar la cartera 360 de CodeDreamers: 54 productos, 16 formatos de entrega, 10 sectores y un ecosistema modular de software, datos e IA.
+A static, multilingual landing site for CodeDreamers’ 54-product software, data, and AI portfolio.
 
-## Desarrollo
+Live site: https://codedreamers.surge.sh
 
-Requiere Node.js 20 o posterior.
+## Features
+
+- Responsive branding aligned with the CodeDreamers reference direction.
+- Spanish, Brazilian Portuguese, and English routes: `/es/`, `/pt-br/`, and `/en/`.
+- Localized catalog PDF downloads.
+- Accessible project-mode disclosures and language navigation.
+- Responsive footer and contact links.
+
+## Local development
+
+Use npm: `package-lock.json` is the authoritative dependency lockfile.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-## Compilar
+## Commands
 
 ```bash
 npm run build
+npm test
+npm run verify:static
+npm run preview
 ```
 
-El contenido de `dist/` queda listo para publicar en Surge:
+## Architecture
+
+The Vite + React application renders the landing page from typed locale dictionaries. The production build creates a client bundle, an SSR renderer, and prerendered locale documents. It is fully static: no backend, CDN dependency, or runtime API is required.
+
+## Verification
+
+Run `npm test` for regression coverage, `npm run build` to generate the static site, and `npm run verify:static` to validate rendered assets and metadata.
+
+## Deployment
+
+The build output in `dist/` is deployed to Surge at `codedreamers.surge.sh`.
 
 ```bash
 npx surge ./dist codedreamers.surge.sh
 ```
 
-El build utiliza rutas relativas, genera el fallback `200.html`, incluye fuentes locales y no necesita backend ni CDN.
+## Repository structure
 
-## Contenido principal
+- `src/CodeDreamersLanding.tsx` — landing UI and interactions.
+- `src/i18n/` — typed locale dictionaries, routing, and catalog localization.
+- `src/static-render.tsx` — SSR document and localized metadata rendering.
+- `src/styles.css` — responsive visual system and motion.
+- `scripts/` — prerendering and static-output verification.
+- `public/` — brand assets, catalog PDFs, social image, robots, and sitemap.
+- `PRODUCT.md` — product source of truth.
+- `DESIGN.md` — brand and creative-direction reference.
 
-- `src/CodeDreamersLanding.tsx`: catálogo, contenido e interacciones.
-- `src/styles.css`: sistema visual, responsive y movimiento.
-- `public/`: identidad, vista social, robots y sitemap.
-- `PRODUCT.md`: verdad de producto extraída de la cartera.
-- `DESIGN.md`: sistema de marca y dirección creativa.
-
-## Contacto incluido
+## Contact
 
 - `codedreamers.dev@gmail.com`

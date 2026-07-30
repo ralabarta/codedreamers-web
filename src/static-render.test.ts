@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import { getDictionary } from "./i18n/dictionaries";
@@ -75,6 +77,48 @@ const attribute = (html: string, selector: RegExp): string => {
 
 const count = (html: string, pattern: RegExp): number =>
   Array.from(html.matchAll(pattern)).length;
+
+it("derives static SEO metadata from dictionaries", () => {
+  const source = readFileSync(
+    new URL("./static-render.tsx", import.meta.url),
+    "utf8",
+  );
+
+  expect(source).toMatch(
+    /import \{ getDictionary \} from "\.\/i18n\/dictionaries";[\s\S]*?const localized = getDictionary\(locale\)\.seo;/,
+  );
+  expect(source).not.toContain("const metadata = {");
+});
+
+it("requires the Vite 8 Node.js support range", () => {
+  const packageJson = JSON.parse(
+    readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+  ) as { engines: { node: string } };
+
+  expect(packageJson.engines.node).toBe("^20.19.0 || >=22.12.0");
+});
+
+it("uses the Rolldown build configuration", () => {
+  const config = readFileSync(new URL("../vite.config.ts", import.meta.url), "utf8");
+
+  expect(config).toMatch(/build:\s*\{[\s\S]*?rolldownOptions:\s*\{/);
+  expect(config).not.toContain("rollupOptions");
+});
+
+it("locks Vite at 8.0.16 or later", () => {
+  const packageJson = JSON.parse(
+    readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+  ) as { devDependencies: { vite: string } };
+  const [, major, minor, patch] = packageJson.devDependencies.vite.match(
+    /^(\d+)\.(\d+)\.(\d+)$/,
+  ) ?? [];
+
+  expect(
+    Number(major) > 8 ||
+      (Number(major) === 8 &&
+        (Number(minor) > 0 || (Number(minor) === 0 && Number(patch) >= 16))),
+  ).toBe(true);
+});
 
 describe("static locale rendering", () => {
   it("uses the production site origin", () => {

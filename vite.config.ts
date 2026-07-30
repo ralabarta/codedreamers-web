@@ -7,7 +7,7 @@ export default defineConfig(({ isSsrBuild }) => ({
   build: {
     target: "es2020",
     sourcemap: false,
-    rollupOptions: {
+    rolldownOptions: {
       output: isSsrBuild ? { entryFileNames: "static-render.js" } : undefined,
     },
   },

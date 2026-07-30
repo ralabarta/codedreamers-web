@@ -2,71 +2,12 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 
 import CodeDreamersLanding from "./CodeDreamersLanding";
+import { getDictionary } from "./i18n/dictionaries";
 import { LOCALE_PATHS, LOCALES } from "./i18n/locale";
 import type { Locale } from "./i18n/locale";
 
 export const SITE_ORIGIN = "https://codedreamers.surge.sh";
 
-const metadata = {
-  es: {
-    title: "CodeDreamers — Software, Datos e IA",
-    description:
-      "54 productos digitales, plataformas empresariales, automatización, datos e IA para captar, vender, operar y escalar.",
-    ogLocale: "es_ES",
-    imageAlt: "CodeDreamers: 54 productos de software, datos e IA",
-    organizationDescription:
-      "Productos digitales, plataformas empresariales, automatización, datos e inteligencia artificial.",
-    knowsAbout: [
-      "Desarrollo de software",
-      "Plataformas empresariales",
-      "Automatización de procesos",
-      "Datos y business intelligence",
-      "Inteligencia artificial aplicada",
-    ],
-  },
-  "pt-BR": {
-    title: "CodeDreamers — Software, Dados e IA",
-    description:
-      "54 produtos digitais, plataformas empresariais, automação, dados e IA para atrair, vender, operar e escalar.",
-    ogLocale: "pt_BR",
-    imageAlt: "CodeDreamers: 54 produtos de software, dados e IA",
-    organizationDescription:
-      "Produtos digitais, plataformas empresariais, automação, dados e inteligência artificial.",
-    knowsAbout: [
-      "Desenvolvimento de software",
-      "Plataformas empresariais",
-      "Automação de processos",
-      "Dados e business intelligence",
-      "Inteligência artificial aplicada",
-    ],
-  },
-  en: {
-    title: "CodeDreamers — Software, Data & AI",
-    description:
-      "54 digital products, enterprise platforms, automation, data and AI to attract, sell, operate and scale.",
-    ogLocale: "en_US",
-    imageAlt: "CodeDreamers: 54 software, data and AI products",
-    organizationDescription:
-      "Digital products, enterprise platforms, automation, data and artificial intelligence.",
-    knowsAbout: [
-      "Software development",
-      "Enterprise platforms",
-      "Process automation",
-      "Data and business intelligence",
-      "Applied artificial intelligence",
-    ],
-  },
-} as const satisfies Record<
-  Locale,
-  {
-    title: string;
-    description: string;
-    ogLocale: string;
-    imageAlt: string;
-    organizationDescription: string;
-    knowsAbout: readonly string[];
-  }
->;
 
 export function escapeHtml(value: string): string {
   return value.replace(
@@ -83,7 +24,7 @@ export function escapeHtml(value: string): string {
 }
 
 export function organizationJsonLd(locale: Locale) {
-  const localized = metadata[locale];
+  const localized = getDictionary(locale).seo;
 
   return {
     "@context": "https://schema.org",
@@ -109,25 +50,25 @@ const alternateLinks = LOCALES.map(
   .join("\n    ");
 
 export function localeHead(locale: Locale): string {
-  const localized = metadata[locale];
+  const localized = getDictionary(locale).seo;
   const canonical = `${SITE_ORIGIN}${LOCALE_PATHS[locale]}`;
   const jsonLd = JSON.stringify(organizationJsonLd(locale)).replace(/</g, "\\u003c");
 
   return `<title>${escapeHtml(localized.title)}</title>
     <meta name="description" content="${escapeHtml(localized.description)}" />
-    <meta property="og:title" content="${escapeHtml(localized.title)}" />
-    <meta property="og:description" content="${escapeHtml(localized.description)}" />
+    <meta property="og:title" content="${escapeHtml(localized.ogTitle)}" />
+    <meta property="og:description" content="${escapeHtml(localized.ogDescription)}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="${escapeHtml(localized.ogLocale)}" />
     <meta property="og:site_name" content="CodeDreamers" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:image" content="${SITE_ORIGIN}/og-image.png" />
-    <meta property="og:image:alt" content="${escapeHtml(localized.imageAlt)}" />
+    <meta property="og:image:alt" content="${escapeHtml(localized.ogImageAlt)}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${escapeHtml(localized.title)}" />
-    <meta name="twitter:description" content="${escapeHtml(localized.description)}" />
+    <meta name="twitter:title" content="${escapeHtml(localized.twitterTitle)}" />
+    <meta name="twitter:description" content="${escapeHtml(localized.twitterDescription)}" />
     <meta name="twitter:image" content="${SITE_ORIGIN}/og-image.png" />
     <link rel="canonical" href="${canonical}" />
     ${alternateLinks}

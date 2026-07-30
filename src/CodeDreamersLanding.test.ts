@@ -63,6 +63,21 @@ function stripSelectorVisibleText(selector: string) {
     .trim();
 }
 
+it("keeps closed mobile navigation locale links hidden and inert", () => {
+  const styles = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
+  const mobileStyles = styles.slice(styles.indexOf("@media (max-width: 900px)"));
+
+  expect(mobileStyles).toMatch(
+    /\.site-header nav(?:,\s*\.site-header nav\.is-open)?\s*\{[^}]*pointer-events:\s*none;[^}]*visibility:\s*hidden;/,
+  );
+  expect(mobileStyles).toMatch(
+    /\.site-header nav\.is-open\s*\{[^}]*pointer-events:\s*auto;[^}]*visibility:\s*visible;/,
+  );
+  expect(mobileStyles).toMatch(
+    /\.site-header > nav:not\(\.is-open\) \.locale-selector\s*\{[^}]*pointer-events:\s*none;[^}]*visibility:\s*hidden;/,
+  );
+});
+
 it("exports safe local flag assets for every locale", () => {
   const localeFlagSources = (
     landingModule as typeof landingModule & {

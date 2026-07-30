@@ -2573,6 +2573,11 @@ button:hover > .arrow span {
     white-space: normal;
   }
 
+  .site-header > nav:not(.is-open) .locale-selector {
+    pointer-events: none;
+    visibility: hidden;
+  }
+
   .site-header > nav .locale-selector {
     position: static;
     z-index: auto;
