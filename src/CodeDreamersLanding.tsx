@@ -42,10 +42,19 @@ export const LOCALE_FLAG_SOURCES: Record<Locale, string> = {
   en: "/flags/en.svg",
 };
 
-export const CATALOG_SOURCES: Record<Locale, string> = {
-  es: "/catalog/codedreamers-catalog-es.pdf",
-  "pt-BR": "/catalog/codedreamers-catalog-pt.pdf",
-  en: "/catalog/codedreamers-catalog-en.pdf",
+export const CATALOG_SOURCES: Record<Locale, { href: string; download: string }> = {
+  es: {
+    href: "/catalog/codedreamers-catalog-es.bin",
+    download: "codedreamers-catalog-es.pdf",
+  },
+  "pt-BR": {
+    href: "/catalog/codedreamers-catalog-pt.bin",
+    download: "codedreamers-catalog-pt.pdf",
+  },
+  en: {
+    href: "/catalog/codedreamers-catalog-en.bin",
+    download: "codedreamers-catalog-en.pdf",
+  },
 };
 
 export function LocaleSelector({
@@ -755,8 +764,8 @@ export function Portfolio({
             <a
               className="catalog-downloads__link"
               key={catalogLocale}
-              href={CATALOG_SOURCES[catalogLocale]}
-              download
+              href={CATALOG_SOURCES[catalogLocale].href}
+              download={CATALOG_SOURCES[catalogLocale].download}
               aria-label={copy.downloadAriaLabels[catalogLocale]}
             >
               <img
@@ -1322,8 +1331,12 @@ export default function CodeDreamersLanding({
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <main>
-      {/* 
+    <>
+      <a className="skip-link" href="#inicio">
+        {dictionary.accessibility.skipToContent}
+      </a>
+      <main>
+        {/*
         THESIS: Una necesidad puntual entra en el sistema y sale convertida en una plataforma conectada; se rechaza el hero genérico de agencia y la cuadrícula de servicios.
         OWN-WORLD: Azul noche cartográfico, placas de papel frío, seis rutas cromáticas, coordenadas y cápsulas del símbolo.
         STORY: El visitante entiende la oferta, elige un resultado, explora 54 productos, ve cómo se conectan y abre una conversación.
@@ -1420,6 +1433,7 @@ export default function CodeDreamersLanding({
         heroRef={heroRef}
         mobileMenuOpen={menuOpen}
       />
-    </main>
+      </main>
+    </>
   );
 }

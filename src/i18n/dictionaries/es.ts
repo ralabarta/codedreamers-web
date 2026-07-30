@@ -11,6 +11,9 @@ export const es = {
     },
     activeLabel: "Idioma activo",
   },
+  accessibility: {
+    skipToContent: "Saltar al contenido principal",
+  },
   header: {
     brandAriaLabel: "CodeDreamers, inicio",
     openMenuLabel: "Abrir menú",

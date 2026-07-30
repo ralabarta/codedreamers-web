@@ -40,10 +40,19 @@ const expectedLocaleFlagSources: Record<Locale, string> = {
   en: "/flags/en.svg",
 };
 
-const expectedCatalogFiles = {
-  es: "/catalog/codedreamers-catalog-es.pdf",
-  "pt-BR": "/catalog/codedreamers-catalog-pt.pdf",
-  en: "/catalog/codedreamers-catalog-en.pdf",
+const expectedCatalogDownloads = {
+  es: {
+    href: "/catalog/codedreamers-catalog-es.bin",
+    download: "codedreamers-catalog-es.pdf",
+  },
+  "pt-BR": {
+    href: "/catalog/codedreamers-catalog-pt.bin",
+    download: "codedreamers-catalog-pt.pdf",
+  },
+  en: {
+    href: "/catalog/codedreamers-catalog-en.bin",
+    download: "codedreamers-catalog-en.pdf",
+  },
 } as const;
 
 const expectedFlagElements: Record<Locale, string[]> = {
@@ -62,6 +71,36 @@ function stripSelectorVisibleText(selector: string) {
     .replace(/<[^>]+>/g, "")
     .trim();
 }
+
+it("renders a localized skip link to the focusable hero after header navigation", () => {
+  const labels: Record<Locale, string> = {
+    es: "Saltar al contenido principal",
+    "pt-BR": "Pular para o conteúdo principal",
+    en: "Skip to main content",
+  };
+  const styles = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
+
+  for (const locale of ["es", "pt-BR", "en"] as const) {
+    const markup = renderToStaticMarkup(
+      createElement(CodeDreamersLanding, { locale }),
+    );
+    const skipLink = `<a class="skip-link" href="#inicio">${labels[locale]}</a>`;
+    const heroTarget = '<section class="hero" id="inicio" tabindex="-1"';
+    const navIndex = markup.indexOf("<nav");
+
+    expect(markup).toContain(skipLink);
+    expect(markup).toContain(heroTarget);
+    expect(markup.indexOf(skipLink)).toBeLessThan(navIndex);
+    expect(markup.indexOf(heroTarget)).toBeGreaterThan(navIndex);
+  }
+
+  expect(styles).toMatch(
+    /\.skip-link\s*\{[^}]*position:\s*absolute;[^}]*width:\s*1px;[^}]*height:\s*1px;[^}]*overflow:\s*hidden;[^}]*clip-path:\s*inset\(50%\);/,
+  );
+  expect(styles).toMatch(
+    /\.skip-link:focus-visible\s*\{[^}]*width:\s*auto;[^}]*height:\s*auto;[^}]*overflow:\s*visible;[^}]*clip-path:\s*none;/,
+  );
+});
 
 it("keeps closed mobile navigation locale links hidden and inert", () => {
   const styles = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
@@ -128,6 +167,21 @@ it("binds source and built flag copies in the static verifier", () => {
   expect(verifier).toContain("sourceFlag.equals(builtFlag)");
   expect(verifier).toContain("assertSafeFlag(sourceFlag.toString(\"utf8\"), flagFile)");
   expect(verifier).toContain("assertSafeFlag(builtFlag.toString(\"utf8\"), flagFile)");
+});
+
+it("binds PDF transport copies and localized download metadata in the static verifier", () => {
+  const verifier = readFileSync(
+    new URL("../scripts/verify-static.mjs", import.meta.url),
+    "utf8",
+  );
+
+  for (const catalog of Object.values(expectedCatalogDownloads)) {
+    expect(verifier).toContain(`file: "${catalog.download.replace(".pdf", "")}"`);
+  }
+  expect(verifier).toContain('href="/catalog/${catalog.file}.bin"');
+  expect(verifier).toContain('download="${catalog.file}.pdf"');
+  expect(verifier).toContain("sourcePdf.equals(sourceBin)");
+  expect(verifier).toContain("sourceBin.equals(builtBin)");
 });
 
 it("uses a versioned, high-contrast, self-contained favicon", () => {
@@ -203,12 +257,22 @@ it.each(["es", "pt-BR", "en"] as const)(
     expect(markup).toContain(localizedFamilies[0].products[0].name);
     expect(markup).toContain(dictionary.catalog.includesLabel);
     expect(markup).toContain(`aria-label="${dictionary.catalog.downloadsAriaLabel}"`);
-    for (const [catalogLocale, href] of Object.entries(expectedCatalogFiles)) {
-      expect(markup).toContain(`href="${href}" download=""`);
+    for (const [catalogLocale, catalog] of Object.entries(expectedCatalogDownloads)) {
+      expect(markup).toContain(`href="${catalog.href}" download="${catalog.download}"`);
       expect(markup).toContain(
         `aria-label="${dictionary.catalog.downloadAriaLabels[catalogLocale as Locale]}"`,
       );
-      expect(existsSync(new URL(`../public${href}`, import.meta.url)), href).toBe(true);
+      expect(existsSync(new URL(`../public${catalog.href}`, import.meta.url)), catalog.href).toBe(true);
+      expect(
+        readFileSync(
+          new URL(`../public${catalog.href}`, import.meta.url),
+        ).equals(
+          readFileSync(
+            new URL(`../public/catalog/${catalog.download}`, import.meta.url),
+          ),
+        ),
+        catalogLocale,
+      ).toBe(true);
     }
     expect(markup).toContain("<details");
     expect(markup).toContain("<summary>");

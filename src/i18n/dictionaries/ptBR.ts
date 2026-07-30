@@ -7,6 +7,9 @@ export const ptBR = {
     labels: { es: "Espanhol", "pt-BR": "Português (Brasil)", en: "Inglês" },
     activeLabel: "Idioma ativo",
   },
+  accessibility: {
+    skipToContent: "Pular para o conteúdo principal",
+  },
   header: {
     brandAriaLabel: "CodeDreamers, início",
     openMenuLabel: "Abrir menu",

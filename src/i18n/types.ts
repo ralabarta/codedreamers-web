@@ -81,6 +81,9 @@ export interface Dictionary {
     labels: Record<Locale, string>;
     activeLabel: string;
   };
+  accessibility: {
+    skipToContent: string;
+  };
   header: {
     brandAriaLabel: string;
     openMenuLabel: string;

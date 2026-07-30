@@ -7,6 +7,9 @@ export const en = {
     labels: { es: "Spanish", "pt-BR": "Portuguese (Brazil)", en: "English" },
     activeLabel: "Active language",
   },
+  accessibility: {
+    skipToContent: "Skip to main content",
+  },
   header: {
     brandAriaLabel: "CodeDreamers, home",
     openMenuLabel: "Open menu",

@@ -6,6 +6,11 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const distDir = resolve(projectRoot, "dist");
 const flagFiles = ["es.svg", "pt-br.svg", "en.svg"];
 const brandFiles = ["favicon.svg", "brand-mark.svg", "brand-wordmark.svg", "og-image.svg"];
+const catalogs = [
+  { locale: "es", file: "codedreamers-catalog-es" },
+  { locale: "pt-BR", file: "codedreamers-catalog-pt" },
+  { locale: "en", file: "codedreamers-catalog-en" },
+];
 
 const locales = {
   es: {
@@ -142,7 +147,7 @@ function verifyMetadata(html, locale, expected) {
 
   assert(!/__HTML_LANG__|<!--locale-head-->|<!--app-html-->/.test(html), `${locale}: template marker remains`);
   assert(
-    /<div id="root">(?:<link rel="preload" as="image" href="\/(?:brand-mark\.svg|flags\/(?:es|pt-br|en)\.svg)"\/>)*<main>/.test(
+    /<div id="root">(?:<link rel="preload" as="image" href="\/(?:brand-mark\.svg|flags\/(?:es|pt-br|en)\.svg)"\/>)*<a class="skip-link" href="#inicio">[^<]+<\/a><main>[^]*?<nav\b[^>]*>[^]*?<\/nav>[^]*?<section class="hero" id="inicio" tabindex="-1"/.test(
       html,
     ),
     `${locale}: root was not prerendered or contains an unexpected image preload`,
@@ -188,6 +193,17 @@ for (const [locale, expected] of Object.entries(locales)) {
   const html = documents.get(expected.file);
   verifyMetadata(html, locale, expected);
   await verifyAssets(html, expected.path);
+
+  for (const catalog of catalogs) {
+    assert(
+      html.includes(`href="/catalog/${catalog.file}.bin"`),
+      `${locale}: missing ${catalog.file}.bin catalog href`,
+    );
+    assert(
+      html.includes(`download="${catalog.file}.pdf"`),
+      `${locale}: missing ${catalog.file}.pdf catalog download filename`,
+    );
+  }
 }
 
 const rootHtml = documents.get("index.html");
@@ -242,6 +258,22 @@ for (const brandFile of brandFiles) {
   assertSafeBrandSvg(sourceBrand.toString("utf8"), brandFile);
   assertSafeBrandSvg(builtBrand.toString("utf8"), brandFile);
   assert(sourceBrand.equals(builtBrand), `${brandFile}: built brand differs from source`);
+}
+
+for (const catalog of catalogs) {
+  const sourcePdf = await readFile(resolve(projectRoot, "public", "catalog", `${catalog.file}.pdf`));
+  const sourceBin = await readFile(resolve(projectRoot, "public", "catalog", `${catalog.file}.bin`));
+  const builtBin = await readFile(resolve(distDir, "catalog", `${catalog.file}.bin`));
+
+  assert(sourcePdf.equals(sourceBin), `${catalog.file}: public BIN differs from public PDF`);
+  assert(sourceBin.equals(builtBin), `${catalog.file}: built BIN differs from public BIN`);
+
+  try {
+    const builtPdf = await readFile(resolve(distDir, "catalog", `${catalog.file}.pdf`));
+    assert(sourcePdf.equals(builtPdf), `${catalog.file}: built PDF differs from public PDF`);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
 }
 
 console.log(

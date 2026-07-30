@@ -1,62 +1,60 @@
 # CodeDreamers 360
 
-A static, multilingual landing site for CodeDreamers’ 54-product software, data, and AI portfolio.
+Static multilingual landing site built with React, TypeScript, and Vite.
 
-Live site: https://codedreamers.surge.sh
+Live URL: https://codedreamers.surge.sh
 
 ## Features
 
-- Responsive branding aligned with the CodeDreamers reference direction.
-- Spanish, Brazilian Portuguese, and English routes: `/es/`, `/pt-br/`, and `/en/`.
-- Localized catalog PDF downloads.
-- Accessible project-mode disclosures and language navigation.
-- Responsive footer and contact links.
+- Responsive CodeDreamers branding and accessible navigation.
+- Prerendered Spanish, Brazilian Portuguese, and English routes.
+- Searchable 54-product portfolio with localized catalog downloads.
+- Static SEO metadata, sitemap, Open Graph assets, and responsive contact flow.
 
-## Local development
+## Install
 
-Use npm: `package-lock.json` is the authoritative dependency lockfile.
+Requires Node.js 20 or later.
 
 ```bash
 npm ci
-npm run dev
 ```
 
-## Commands
+## Develop and test
+
+```bash
+npm run dev
+npm test
+```
+
+## Build and verify
 
 ```bash
 npm run build
-npm test
 npm run verify:static
 npm run preview
 ```
 
+The production-ready static site is written to `dist/`.
+
 ## Architecture
 
-The Vite + React application renders the landing page from typed locale dictionaries. The production build creates a client bundle, an SSR renderer, and prerendered locale documents. It is fully static: no backend, CDN dependency, or runtime API is required.
-
-## Verification
-
-Run `npm test` for regression coverage, `npm run build` to generate the static site, and `npm run verify:static` to validate rendered assets and metadata.
-
-## Deployment
-
-The build output in `dist/` is deployed to Surge at `codedreamers.surge.sh`.
-
-```bash
-npx surge ./dist codedreamers.surge.sh
-```
-
-## Repository structure
+Vite builds the React client and an SSR bundle. The prerender step emits localized static documents for `/es/`, `/pt-br/`, and `/en/`; production needs no backend or runtime API.
 
 - `src/CodeDreamersLanding.tsx` — landing UI and interactions.
-- `src/i18n/` — typed locale dictionaries, routing, and catalog localization.
-- `src/static-render.tsx` — SSR document and localized metadata rendering.
-- `src/styles.css` — responsive visual system and motion.
+- `src/i18n/` — typed locale dictionaries and catalog localization.
 - `scripts/` — prerendering and static-output verification.
-- `public/` — brand assets, catalog PDFs, social image, robots, and sitemap.
-- `PRODUCT.md` — product source of truth.
-- `DESIGN.md` — brand and creative-direction reference.
+- `public/` — branding, catalog files, flags, social assets, robots, and sitemap.
 
-## Contact
+## Catalog PDF transport
 
-- `codedreamers.dev@gmail.com`
+Surge blocks direct `.pdf` paths. The catalog `.bin` files are byte-identical transport copies of their corresponding PDFs. Catalog links request the `.bin` paths, while their `download` attributes preserve the localized `.pdf` filenames presented to users.
+
+`npm run verify:static` checks that each source PDF, source `.bin` copy, and built `.bin` copy are byte-for-byte equal. It also validates the rendered catalog download paths and filenames.
+
+## Deploy to Surge
+
+```bash
+npm run build
+npm run verify:static
+npx surge ./dist codedreamers.surge.sh
+```
