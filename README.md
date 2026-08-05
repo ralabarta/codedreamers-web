@@ -1,55 +1,59 @@
 # CodeDreamers 360
 
-Static multilingual landing site built with React, TypeScript, and Vite.
+Multilingual static landing site for CodeDreamers — software, data, automation, and AI solutions. Built with React, TypeScript, and Vite; prerendered to plain HTML with zero runtime backend.
 
-Live URL: https://codedreamers.surge.sh
+**Live:** https://codedreamers.surge.sh
 
 ## Features
 
-- Responsive CodeDreamers branding and accessible navigation.
-- Prerendered Spanish, Brazilian Portuguese, and English routes.
-- Searchable 54-product portfolio with localized catalog downloads.
-- Static SEO metadata, sitemap, Open Graph assets, and responsive contact flow.
+- Prerendered Spanish (`/es/`), Brazilian Portuguese (`/pt-br/`), and English (`/en/`) routes.
+- Searchable, filterable 54-product portfolio with localized catalog downloads (ES / PT-BR / EN).
+- Responsive design with accessible navigation, skip links, and reduced-motion support.
+- Static SEO: per-locale metadata, `sitemap.xml`, `robots.txt`, and Open Graph assets.
+- 112 automated tests plus a static-output verification script that gates every deploy.
 
-## Install
+## Tech stack
 
-Requires Node.js 20 or later.
+| Layer | Tooling |
+|-------|---------|
+| UI | React + TypeScript |
+| Build | Vite (client + SSR bundle) |
+| Prerender | Custom Node script (`scripts/prerender.mjs`) |
+| Tests | Vitest |
+| Hosting | Surge (static, no server) |
+
+## Quick start
+
+Requires Node.js 20+.
 
 ```bash
-npm ci
-```
-
-## Develop and test
-
-```bash
-npm run dev
-npm test
+npm ci        # install
+npm run dev   # local dev server
+npm test      # run test suite
 ```
 
 ## Build and verify
 
 ```bash
-npm run build
-npm run verify:static
-npm run preview
+npm run build          # client + SSR + prerender → dist/
+npm run verify:static  # asserts routes, metadata, and catalog integrity
+npm run preview        # serve dist/ locally
 ```
-
-The production-ready static site is written to `dist/`.
 
 ## Architecture
 
-Vite builds the React client and an SSR bundle. The prerender step emits localized static documents for `/es/`, `/pt-br/`, and `/en/`; production needs no backend or runtime API.
+Vite builds the React client and an SSR bundle. The prerender step emits localized static documents for each locale; production needs no backend or runtime API.
 
 - `src/CodeDreamersLanding.tsx` — landing UI and interactions.
 - `src/i18n/` — typed locale dictionaries and catalog localization.
 - `scripts/` — prerendering and static-output verification.
 - `public/` — branding, catalog files, flags, social assets, robots, and sitemap.
 
-## Catalog PDF transport
+## Catalog PDF transport (Surge workaround)
 
-Surge blocks direct `.pdf` paths. The catalog `.bin` files are byte-identical transport copies of their corresponding PDFs. Catalog links request the `.bin` paths, while their `download` attributes preserve the localized `.pdf` filenames presented to users.
+Surge blocks direct `.pdf` paths. The catalog `.bin` files are byte-identical transport copies of their corresponding PDFs: links request the `.bin` paths while their `download` attributes preserve the localized `.pdf` filenames users see.
 
-`npm run verify:static` checks that each source PDF, source `.bin` copy, and built `.bin` copy are byte-for-byte equal. It also validates the rendered catalog download paths and filenames.
+`npm run verify:static` asserts that each source PDF, source `.bin`, and built `.bin` are byte-for-byte equal, and validates the rendered download paths and filenames.
 
 ## Deploy to Surge
 
@@ -58,3 +62,7 @@ npm run build
 npm run verify:static
 npx surge ./dist codedreamers.surge.sh
 ```
+
+## License
+
+See [LICENSE](LICENSE).
